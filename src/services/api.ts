@@ -8,7 +8,7 @@ import axios from 'axios'
 // })
 
 const api = axios.create({
-  baseURL: 'https://hotelapi-f5bdebbke6eceyfg.southeastasia-01.azurewebsites.net',   // ← Azure App Service as API 
+  baseURL: 'https://hotelapi-f5bdebbke6eceyfg.southeastasia-01.azurewebsites.net/api',   // ← Azure App Service as API 
   headers: {
     'Content-Type': 'application/json',
   },
