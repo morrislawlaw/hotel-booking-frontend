@@ -9,6 +9,18 @@ const switchUser = (customerId: number, name: string, email: string) => {
   userStore.switchUser(customerId, name, email)
   router.push('/')   // ← Redirect to Home so data refreshes
 }
+const loginWithGoogle = () => {
+  // Redirect to your backend Google OAuth endpoint
+  window.location.href = 'https://hotelapi-f5bdebbke6eceyfg.southeastasia-01.azurewebsites.net/api/auth/google';
+}
+
+const logout = () => {
+  const userStore = useUserStore()
+  localStorage.removeItem('authToken')
+  userStore.token = ''
+  window.location.reload()   // or router.push('/')
+}
+
 </script>
 
 <template>
@@ -60,6 +72,20 @@ const switchUser = (customerId: number, name: string, email: string) => {
             </button>
           </div>
         </div>
+
+        <!-- NEW: Google Login Button -->
+        <button 
+          @click="loginWithGoogle"
+          class="flex items-center gap-3 bg-white border border-gray-300 hover:border-gray-400 px-5 py-2.5 rounded-2xl text-sm font-medium transition-colors">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5">
+          Sign in with Google
+        </button>
+
+        <button 
+          @click="logout"
+          class="text-sm font-medium text-red-600 hover:text-red-700">
+          Logout
+        </button>
       </div>
     </div>
   </nav>

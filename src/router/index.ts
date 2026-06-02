@@ -32,6 +32,11 @@ const router = createRouter({
       path: '/booking-detail/:id',
       name: 'booking-detail',
       component: () => import('@/views/BookingDetailView.vue')  // we'll create later if needed
+    },
+    {
+      path: '/auth/google-callback',
+      name: 'google-callback',
+      component: () => import('@/views/GoogleCallbackView.vue')
     }
   ]
 })
