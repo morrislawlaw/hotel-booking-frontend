@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import api from '@/services/api'
+import { jwtDecode } from 'jwt-decode' // Run: npm install jwt-decode
 
 const router = useRouter()
 const userStore = useUserStore()

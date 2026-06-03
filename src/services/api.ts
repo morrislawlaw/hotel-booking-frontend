@@ -16,13 +16,29 @@ const api = axios.create({
   timeout: 15000,
 })
 
-// Automatically add Authorization header
-api.interceptors.request.use((config) => {
-  const userStore = useUserStore()
-  if (userStore.token) {
-    config.headers.Authorization = `Bearer ${userStore.token}`
+// Automatically inject JWT Bearer Tokens into all outgoing traffic
+api.interceptors.request.use(
+  (config) => {
+    const userStore = useUserStore()
+    
+    if (userStore.token) {
+      config.headers.Authorization = `Bearer ${userStore.token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
   }
-  return config
-})
+)
+
+
+// // Automatically add Authorization header
+// api.interceptors.request.use((config) => {
+//   const userStore = useUserStore()
+//   if (userStore.token) {
+//     config.headers.Authorization = `Bearer ${userStore.token}`
+//   }
+//   return config
+// })
 
 export default api
