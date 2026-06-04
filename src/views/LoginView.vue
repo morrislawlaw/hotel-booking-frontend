@@ -41,7 +41,7 @@ const handleNormalLogin = async () => {
 //     isLoading.value = false
 
     // 🔥 FIX: Read the structured ApiResponse data model returned by your backend
-    if (response.data && response.data.statusCode === 200) {
+    if (response.data && response.data.message === "success") {
       const token = response.data.data.token
       
       // Save token and sync UI variables

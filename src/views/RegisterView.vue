@@ -32,7 +32,7 @@ const handleRegister = async () => {
       password: password.value
     })
 
-    if (response.data && response.data.statusCode === 200) {
+    if (response.data && response.data.message === "success") {
       successMessage.value = 'Registration successful! logging you in...'
       
       // 🚀 AUTOMATIC LOGIN LOOP: Authenticate immediately right after account provisioning finishes
