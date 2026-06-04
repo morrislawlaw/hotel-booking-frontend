@@ -32,6 +32,7 @@ const handleRegister = async () => {
       password: password.value
     })
 
+    console.log('Registration response:', response.data.message)
     if (response.data && response.data.message === "success") {
       successMessage.value = 'Registration successful! logging you in...'
       
@@ -41,7 +42,7 @@ const handleRegister = async () => {
         password: password.value
       })
 
-      if (loginResponse.data && loginResponse.data.statusCode === 200) {
+      if (loginResponse.data && loginResponse.data.message === "success") {
         const token = loginResponse.data.data.token
         // Set Pinia storage metrics
         const useStore = useUserStore()
