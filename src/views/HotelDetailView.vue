@@ -322,7 +322,7 @@ onMounted(loadHotelDetail)
         <h2 class="text-2xl font-semibold mb-4">Available Rooms ({{ availableRooms.length }})</h2>
         <div class="space-y-4">
           <div v-for="room in availableRooms" :key="room.roomID"
-               @click="toggleRoom(room.roomID)"
+               @click="toggleRoom(room.RoomID || room.roomID)"
                :class="selectedRooms.includes(room.roomID) ? 'ring-2 ring-blue-600 bg-blue-50' : ''"
                class="border rounded-3xl p-6 cursor-pointer hover:shadow-xl transition-all">
             <div class="flex justify-between">

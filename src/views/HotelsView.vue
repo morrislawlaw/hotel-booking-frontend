@@ -39,15 +39,22 @@ const loadAvailableRooms = async () => {
   }
 }
 
-// Navigate to Hotel Detail with selected room + dates
+// Navigate to Hotel Detail dynamically based on selected room metadata
 const goToHotelDetail = (room: any) => {
+  console.log('📦 Raw Room Object Selected:', room)
+  
+  // 🔥 FIX: Extract the uppercase 'HotelID' returned from your SQL stored procedure response
+  const selectedHotelId = room.hotelID || room.HotelID || room.hotelId || 1
+  
+  console.log(`🚀 Routing to Hotel ID target link path: /hotel/${selectedHotelId}`)
+
   router.push({
     name: 'hotel-detail',
-    params: { id: room.hotelID || room.hotelId || 1 },
+    params: { id: selectedHotelId },
     query: {
       checkIn: route.query.checkIn,
       checkOut: route.query.checkOut,
-      roomId: room.roomID || room.roomId   // optional: pass selected room
+      roomId: room.roomID || room.RoomID || room.roomId
     }
   })
 }
