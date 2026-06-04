@@ -32,6 +32,8 @@ const handleRegister = async () => {
       password: password.value
     })
 
+    console.log('Registration response:', response.data)
+    console.log('Registration response code:', response.data.code)
     if (response.data && response.data.code === 0) {
       successMessage.value = 'Registration successful! logging you in...'
       
