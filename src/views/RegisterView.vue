@@ -32,8 +32,7 @@ const handleRegister = async () => {
       password: password.value
     })
 
-    console.log('Registration response:', response.data.message)
-    if (response.data && response.data.message === "success") {
+    if (response.data && response.data.code === 0) {
       successMessage.value = 'Registration successful! logging you in...'
       
       // 🚀 AUTOMATIC LOGIN LOOP: Authenticate immediately right after account provisioning finishes
@@ -42,7 +41,7 @@ const handleRegister = async () => {
         password: password.value
       })
 
-      if (loginResponse.data && loginResponse.data.message === "success") {
+      if (loginResponse.data && loginResponse.data.code === 0) {
         const token = loginResponse.data.data.token
         // Set Pinia storage metrics
         const useStore = useUserStore()
