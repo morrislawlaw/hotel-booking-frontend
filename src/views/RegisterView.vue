@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 import api from '@/services/api'
 
 const router = useRouter()
@@ -31,17 +32,33 @@ const handleRegister = async () => {
       password: password.value
     })
 
-    if (response.data && response.data.success) {
-      successMessage.value = 'Registration successful! Redirecting to login...'
-      setTimeout(() => {
+    if (response.data && response.data.statusCode === 200) {
+      successMessage.value = 'Registration successful! logging you in...'
+      
+      // 🚀 AUTOMATIC LOGIN LOOP: Authenticate immediately right after account provisioning finishes
+      const loginResponse = await api.post('/auth/Loginv2', {
+        user_id: email.value,
+        password: password.value
+      })
+
+      if (loginResponse.data && loginResponse.data.statusCode === 200) {
+        const token = loginResponse.data.data.token
+        // Set Pinia storage metrics
+        const useStore = useUserStore()
+        useStore.setToken(token, email.value)
+        
+        // Push straight back to dashboard view state
+        router.push('/')
+      } else {
+        // Fallback redirection to login if automated sign-in fails
         router.push('/login')
-      }, 2000)
+      }
     } else {
       errorMessage.value = response.data.message || 'Registration failed.'
     }
   } catch (err) {
     console.error('Registration error:', err)
-    errorMessage.value = 'An error occurred during registration.'
+    errorMessage.value = 'An error occurred during account registration processing metrics.'
   } finally {
     isLoading.value = false
   }

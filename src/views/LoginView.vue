@@ -27,16 +27,34 @@ const handleNormalLogin = async () => {
       password: password.value
     })
 
-    if (response.data && response.data.success) {
+//     if (response.data && response.data.success) {
+//       const token = response.data.data.token
+//       userStore.setToken(token, email.value)
+//       router.push('/')
+//     } else {
+//       errorMessage.value = response.data.message || 'Login failed.'
+//     }
+//   } catch (err: any) {
+//     console.error('Login request failed:', err)
+//     errorMessage.value = 'Network error. Please try again later.'
+//   } finally {
+//     isLoading.value = false
+
+    // 🔥 FIX: Read the structured ApiResponse data model returned by your backend
+    if (response.data && response.data.statusCode === 200) {
       const token = response.data.data.token
+      
+      // Save token and sync UI variables
       userStore.setToken(token, email.value)
+      
+      // Clear alerts and push immediately to Home view
       router.push('/')
     } else {
-      errorMessage.value = response.data.message || 'Login failed.'
+      errorMessage.value = response.data.message || 'Invalid email or password configuration.'
     }
   } catch (err: any) {
     console.error('Login request failed:', err)
-    errorMessage.value = 'Network error. Please try again later.'
+    errorMessage.value = 'Network connection failed. Please try again later.'
   } finally {
     isLoading.value = false
   }
