@@ -8,6 +8,10 @@ const bookingId = route.query.bookingId as string
 const totalAmount = route.query.total as string
 const checkIn = route.query.checkIn as string
 const checkOut = route.query.checkOut as string
+
+// Capture the unique session tracker reference passed back by Stripe
+const stripeSessionId = route.query.session_id as string
+
 </script>
 
 <template>
@@ -25,7 +29,7 @@ const checkOut = route.query.checkOut as string
         <div class="space-y-3">
           <div class="flex justify-between">
             <span class="text-gray-500">Booking ID</span>
-            <span class="font-mono font-bold text-lg">#{{ bookingId }}</span>
+            <span class="font-mono font-bold text-lg">#{{ route.query.bookingId || stripeSessionId?.substring(0, 14) + '...' || '#' }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-gray-500">Check-in</span>
