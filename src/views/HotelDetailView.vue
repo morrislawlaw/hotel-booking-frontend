@@ -277,48 +277,98 @@ const filteredRooms = computed(() => {
   })
 })
 
-// ==================== CREATE BOOKING ====================
+// // ==================== CREATE BOOKING ====================
+// const createBooking = async () => {
+//   if (selectedRooms.value.length === 0) {
+//     message.value = { type: 'error', text: 'Please select at least one room before continuing.' }
+//     return
+//   }
+
+//   // Ownership state validation guard
+//   if (!userStore.isAuthenticated) {
+//     alert('You must create an account or sign in to complete your booking reservation.')
+//     router.push('/login')
+//     return
+//   }
+
+//   const payload = {
+//     // The backend extracts the identity context claim from your Bearer token string,
+//     // so we can pass their email variable text directly here
+//     // customerEmail: userStore.userEmail, 
+//     checkInDate: checkInDate.value,
+//     checkOutDate: checkOutDate.value,
+//     roomIDs: selectedRooms.value.join(','),
+//     paymentSuccess: true // Temporary baseline default until Stripe session integration
+//   }
+
+//   bookingLoading.value = true
+//   message.value = null
+
+//   try {
+//     const response = await api.post('/HotelBookingSystem/CreateBooking', payload)
+//     const result = response.data?.data || response.data
+
+//     router.push({
+//       name: 'booking-confirmation',
+//       query: {
+//         bookingId: result.newBookingID || result.bookingID || result.BookingID || 'N/A',
+//         checkIn: checkInDate.value,
+//         checkOut: checkOutDate.value,
+//         total: result.totalAmount || totalPrice.value
+//       }
+//     })
+//   } catch (err: any) {
+//     const msg = err.response?.data?.message || err.message || 'Booking validation processing failed.'
+//     message.value = { type: 'error', text: `❌ ${msg}` }
+//   } finally {
+//     bookingLoading.value = false
+//   }
+// }
+
+// ==================== REWRITTEN STRIPE CHECKOUT INITIATION ====================
 const createBooking = async () => {
   if (selectedRooms.value.length === 0) {
     message.value = { type: 'error', text: 'Please select at least one room before continuing.' }
     return
   }
 
-  // Ownership state validation guard
+  // Security check: Verify user session state before executing payment tunnels
   if (!userStore.isAuthenticated) {
-    alert('You must create an account or sign in to complete your booking reservation.')
+    alert('You must sign in or create an account to complete your reservation.')
     router.push('/login')
     return
   }
 
+  // Define the criteria DTO properties expected by StripePaymentController
   const payload = {
-    // The backend extracts the identity context claim from your Bearer token string,
-    // so we can pass their email variable text directly here
-    // customerEmail: userStore.userEmail, 
     checkInDate: checkInDate.value,
     checkOutDate: checkOutDate.value,
-    roomIDs: selectedRooms.value.join(','),
-    paymentSuccess: true // Temporary baseline default until Stripe session integration
+    roomIDs: selectedRooms.value.join(',')
   }
 
   bookingLoading.value = true
   message.value = null
 
   try {
-    const response = await api.post('/HotelBookingSystem/CreateBooking', payload)
-    const result = response.data?.data || response.data
+    console.log('🚀 Initiating Stripe checkout request payload:', payload)
+    
+    // 1. Send checkout details to your new dedicated StripePayment controller endpoint
+    const response = await api.post('/StripePayment/CreateCheckoutSession', payload)
+    
+    // 2. Extract the authenticated Stripe checkout URL string returned by your API
+    const checkoutUrl = response.data?.checkoutUrl || response.data?.data?.checkoutUrl
 
-    router.push({
-      name: 'booking-confirmation',
-      query: {
-        bookingId: result.newBookingID || result.bookingID || result.BookingID || 'N/A',
-        checkIn: checkInDate.value,
-        checkOut: checkOutDate.value,
-        total: result.totalAmount || totalPrice.value
-      }
-    })
+    if (checkoutUrl) {
+      message.value = { type: 'success', text: 'Secure checkout session created! Redirecting to Stripe...' }
+      
+      // 3. 💥 THE HANDSHAKE: Smoothly redirect the browser tab to Stripe's payment layout
+      window.location.href = checkoutUrl
+    } else {
+      throw new Error('Failed to parse a valid payment link entry from the server gateway.')
+    }
   } catch (err: any) {
-    const msg = err.response?.data?.message || err.message || 'Booking validation processing failed.'
+    console.error('❌ Stripe processing failure details:', err)
+    const msg = err.response?.data?.message || err.message || 'Payment initiation failed.'
     message.value = { type: 'error', text: `❌ ${msg}` }
   } finally {
     bookingLoading.value = false
