@@ -295,9 +295,9 @@ onMounted(loadMyBookings)
                 {{ b.HotelName || b.hotelName }}
               </h3>
               <span 
-                :class="getStatusClass(b.Status)" 
+                :class="getStatusClass(b.status)" 
                 class="px-3 py-1 rounded-full text-xs font-bold uppercase border tracking-wider">
-                {{ b.Status }}
+                {{ b.status }}
               </span>
             </div>
             
