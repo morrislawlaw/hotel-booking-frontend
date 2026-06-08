@@ -317,7 +317,7 @@ onMounted(loadMyBookings)
           <div>
             <div class="text-xs text-gray-400 font-bold uppercase tracking-wider md:text-right">Total Paid</div>
             <div class="text-2xl font-black text-emerald-600 mt-0.5">
-              {{ b.TotalAmount_HKD || b.TotalAmountHkd || 'HKD ' + b.TotalAmount }}
+              {{ b.totalAmount_HKD || b.totalAmountHkd || 'HKD ' + b.totalAmount }}
             </div>
           </div>
           <button class="md:mt-3 px-4 py-2 text-sm font-semibold bg-gray-50 hover:bg-gray-100 group-hover:bg-blue-50 group-hover:text-blue-600 text-gray-600 rounded-xl transition-colors">
