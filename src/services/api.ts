@@ -9,7 +9,7 @@ import { useUserStore } from '@/stores/user'
 // })
 
 const api = axios.create({
-  baseURL: 'https://hotelapi-f5bdebbke6eceyfg.southeastasia-01.azurewebsites.net/api',   // ← Azure App Service as API 
+  baseURL: 'https://hotel-api-linux-bdf7g6f3bjf0dwhz.eastasia-01.azurewebsites.net/api',   // ← Azure App Service as API 
   headers: {
     'Content-Type': 'application/json',
   },
