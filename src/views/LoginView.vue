@@ -103,7 +103,7 @@ const handleNormalLogin = async () => {
       </div>
 
       <div>
-        <a href="https://hotelapi-f5bdebbke6eceyfg.southeastasia-01.azurewebsites.net/api/auth/google"
+        <a href="https://hotel-api-linux-bdf7g6f3bjf0dwhz.eastasia-01.azurewebsites.net/api/auth/google"
            class="w-full flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           <svg class="h-5 w-5" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
             <g transform="matrix(1, 0, 0, 1, 0, 0)">

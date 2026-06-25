@@ -100,7 +100,7 @@ const router = useRouter()
 
 const loginWithGoogle = () => {
   // Redirect directly to your live production Google OAuth endpoint
-  window.location.href = 'https://hotelapi-f5bdebbke6eceyfg.southeastasia-01.azurewebsites.net/api/auth/google';
+  window.location.href = 'https://hotel-api-linux-bdf7g6f3bjf0dwhz.eastasia-01.azurewebsites.net/api/auth/google';
 }
 
 const logout = () => {
