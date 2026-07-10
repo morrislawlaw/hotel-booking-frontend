@@ -1,12 +1,6 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores/user'
 
-// const api = axios.create({
-//   baseURL: 'https://www.488865.xyz/api',   // ← Cloudflare tunnel of local IIS port 
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// })
 
 const api = axios.create({
   baseURL: 'https://hotel-api-linux-bdf7g6f3bjf0dwhz.eastasia-01.azurewebsites.net/api',   // ← Azure App Service as API 
@@ -31,14 +25,5 @@ api.interceptors.request.use(
   }
 )
 
-
-// // Automatically add Authorization header
-// api.interceptors.request.use((config) => {
-//   const userStore = useUserStore()
-//   if (userStore.token) {
-//     config.headers.Authorization = `Bearer ${userStore.token}`
-//   }
-//   return config
-// })
 
 export default api

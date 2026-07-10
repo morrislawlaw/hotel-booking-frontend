@@ -27,19 +27,6 @@ const handleNormalLogin = async () => {
       password: password.value
     })
 
-//     if (response.data && response.data.success) {
-//       const token = response.data.data.token
-//       userStore.setToken(token, email.value)
-//       router.push('/')
-//     } else {
-//       errorMessage.value = response.data.message || 'Login failed.'
-//     }
-//   } catch (err: any) {
-//     console.error('Login request failed:', err)
-//     errorMessage.value = 'Network error. Please try again later.'
-//   } finally {
-//     isLoading.value = false
-
     // 🔥 FIX: Read the structured ApiResponse data model returned by your backend
     console.info('Response:', response.data.code)
     if (response.data && response.data.code === 0) {
