@@ -81,7 +81,7 @@ onMounted(loadAvailableHotels)
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div 
         v-for="hotel in hotels" 
-        :key="hotel.HotelID"
+        :key="hotel.hotelID"
         @click="goToHotelDetail(hotel)"
         class="bg-white rounded-3xl shadow-md hover:shadow-2xl cursor-pointer transition-all overflow-hidden group border border-gray-100 flex flex-col justify-between">
         
