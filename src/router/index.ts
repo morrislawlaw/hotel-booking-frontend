@@ -7,22 +7,26 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue')
+      component: () => import('@/views/HomeView.vue'),
+      meta: { title: 'Find Your Perfect Stay' }
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue')
+      component: () => import('@/views/LoginView.vue'),
+      meta: { title: 'Sign In' }
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('@/views/RegisterView.vue')
+      component: () => import('@/views/RegisterView.vue'),
+      meta: { title: 'Create an Account' }
     },
     {
       path: '/hotels',
       name: 'hotels',
-      component: () => import('@/views/HotelsView.vue')
+      component: () => import('@/views/HotelsView.vue'),
+      meta: { title: 'Available Properties' }
     },
     {
       path: '/hotel/:id',
@@ -34,22 +38,26 @@ const router = createRouter({
       name: 'my-bookings',
       component: () => import('@/views/MyBookingsView.vue'),
       // 🔒 This metadata tag flags the route as private
-      meta: { requiresAuth: true }
+      meta: { title: 'My Bookings', requiresAuth: true }
+      
     },
     {
       path: '/booking-confirmation',
       name: 'booking-confirmation',
-      component: () => import('@/views/BookingConfirmationView.vue')
+      component: () => import('@/views/BookingConfirmationView.vue'),
+      meta: { title: 'Booking Confirmation' }
     },
     {
       path: '/booking-detail/:id',
       name: 'booking-detail',
-      component: () => import('@/views/BookingDetailView.vue')  // we'll create later if needed
+      component: () => import('@/views/BookingDetailView.vue'), // we'll create later if needed
+      meta: { title: 'Booking Details' }
     },
     {
       path: '/auth/google-callback',
       name: 'google-callback',
-      component: () => import('@/views/GoogleCallbackView.vue')
+      component: () => import('@/views/GoogleCallbackView.vue'),
+      meta: { title: 'Google Callback' }
     }
   ]
 })
@@ -57,11 +65,17 @@ const router = createRouter({
 // Navigation Guard: Intercept routing attempts before they render
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
+  const baseTitle = 'HotelBook'
+  const pageTitle = to.meta.title ? `${to.meta.title} | ${baseTitle}` : baseTitle
   
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+    // Update the actual DOM title property
+  document.title = pageTitle
     // Redirect unauthenticated users back to the sign-in form
     next('/login')
   } else {
+    // Update the actual DOM title property
+  document.title = pageTitle
     next()
   }
 })
