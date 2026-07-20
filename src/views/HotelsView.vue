@@ -113,24 +113,24 @@ onMounted(loadAvailableHotels)
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div 
         v-for="hotel in hotels" 
-        :key="hotel.hotelID || hotel.HotelID"
+        :key="hotel.HotelID"
         @click="goToHotelDetail(hotel)"
         class="bg-white rounded-3xl shadow-md hover:shadow-2xl cursor-pointer transition-all overflow-hidden group border border-gray-100 flex flex-col justify-between">
         
         <div class="h-48 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center text-6xl text-white relative">
           🏢
           <div class="absolute top-4 right-4 bg-black/30 backdrop-blur-md text-yellow-400 px-3 py-1 rounded-full text-sm font-bold">
-            ★ {{ hotel.starRating || hotel.StarRating || 4 }}
+            ★ {{ hotel.StarRating || 4 }}
           </div>
         </div>
         
         <div class="p-6 flex-1 flex flex-col justify-between">
           <div>
             <h3 class="font-bold text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">
-              {{ hotel.hotelName || hotel.HotelName }}
+              {{ hotel.HotelName }}
             </h3>
             <p class="text-gray-500 font-medium text-sm mt-1">
-              📍 {{ hotel.address || hotel.Address }}, {{ hotel.city || hotel.City }}
+              📍 {{ hotel.Address }}, {{ hotel.City }}
             </p>
           </div>
           
@@ -138,7 +138,7 @@ onMounted(loadAvailableHotels)
             <div class="text-xs text-gray-400 uppercase font-bold tracking-wider">Starting From</div>
             <div class="flex justify-between items-baseline mt-1">
               <span class="text-3xl font-extrabold text-emerald-600">
-                HKD {{ (hotel.startingPricePerNight || hotel.StartingPricePerNight).toLocaleString() }}
+                HKD {{ (hotel.StartingPricePerNight).toLocaleString() }}
               </span>
               <span class="text-sm text-gray-500 font-medium">/ night</span>
             </div>
