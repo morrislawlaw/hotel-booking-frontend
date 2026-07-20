@@ -2,43 +2,34 @@ export type BookingStatus = 'Pending' | 'Confirmed' | 'CheckedIn' | 'CheckedOut'
 
 // Maps back to CreateBookingInputDto
 export interface CreateBookingInputDto {
-  CheckInDate: string;
-  CheckOutDate: string;
-  RoomIDs: string; // Comma separated e.g., "1,5,12"
-  PaymentSuccess: boolean;
+  checkInDate: string;
+  checkOutDate: string;
+  roomIDs: string; // Comma separated e.g., "1,5,12"
+  paymentSuccess: boolean;
 }
 
 // Maps back to CancelBookingInputDto
 export interface CancelBookingInputDto {
-  BookingID: number;
-  Reason?: string | null;
+  bookingID: number;
+  reason?: string | null;
 }
 
 // Represents the transaction items processed inside your report views
 export interface BookingReportItem {
-  BookingID: number;
-  customerID: string;
-  HotelName: string;
-  City?: string;
-  RoomsBooked?: number;
-  CheckInDate: string;
-  CheckOutDate: string;
-  TotalAmount: number;
-  status: BookingStatus;
-  
-  // Runtime UI layout property variants found in MyBookingsView template loop mappings
   bookingID: number;
+  customerID: string;
   hotelName: string;
   city?: string;
   roomsBooked?: number;
   checkInDate: string;
   checkOutDate: string;
   totalAmount: number;
+  status: BookingStatus;
   
-  CheckIn_Friendly?: string;
-  CheckInFriendly?: string;
-  CheckOut_Friendly?: string;
-  CheckOutFriendly?: string;
+  checkIn_Friendly?: string;
+  checkInFriendly?: string;
+  checkOut_Friendly?: string;
+  checkOutFriendly?: string;
   totalAmount_HKD?: string;
   totalAmountHkd?: string;
 }

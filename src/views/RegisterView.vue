@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import api from '@/services/api'
+import { authService } from '@/services/authService'
+//import api from '@/services/api'
 
 const router = useRouter()
 
@@ -25,39 +26,60 @@ const handleRegister = async () => {
   successMessage.value = ''
 
   try {
-    const response = await api.post('/auth/register', {
+    // const response = await api.post('/auth/register', {
+    //   name: name.value,
+    //   email: email.value,
+    //   phone: phone.value ? phone.value : null,
+    //   password: password.value
+    // })
+
+    // console.log('Registration response:', response.data)
+    // console.log('Registration response code:', response.data.code)
+    // if (response.data && response.data.code === 0) {
+    //   successMessage.value = 'Registration successful! logging you in...'
+      
+    //   // 🚀 AUTOMATIC LOGIN LOOP: Authenticate immediately right after account provisioning finishes
+    //   const loginResponse = await api.post('/auth/Loginv2', {
+    //     user_id: email.value,
+    //     password: password.value
+    //   })
+
+    //   if (loginResponse.data && loginResponse.data.code === 0) {
+    //     const token = loginResponse.data.data.token
+    //     // Set Pinia storage metrics
+    //     const useStore = useUserStore()
+    //     useStore.setToken(token, email.value)
+        
+    //     // Push straight back to dashboard view state
+    //     router.push('/')
+    //   } else {
+    //     // Fallback redirection to login if automated sign-in fails
+    //     router.push('/login')
+    //   }
+    // } else {
+    //   errorMessage.value = response.data.message || 'Registration failed.'
+    // }
+    // 1. Fire the registration endpoint via the service layer
+    await authService.register({
       name: name.value,
       email: email.value,
-      phone: phone.value ? phone.value : null,
+      phone: phone.value || null,
       password: password.value
     })
 
-    console.log('Registration response:', response.data)
-    console.log('Registration response code:', response.data.code)
-    if (response.data && response.data.code === 0) {
-      successMessage.value = 'Registration successful! logging you in...'
-      
-      // 🚀 AUTOMATIC LOGIN LOOP: Authenticate immediately right after account provisioning finishes
-      const loginResponse = await api.post('/auth/Loginv2', {
-        user_id: email.value,
-        password: password.value
-      })
+    successMessage.value = 'Registration successful! logging you in...'
+    
+    // 2. Automated login cycle running securely through the service layer
+    const loginData = await authService.login({
+      user_id: email.value,
+      password: password.value
+    })
 
-      if (loginResponse.data && loginResponse.data.code === 0) {
-        const token = loginResponse.data.data.token
-        // Set Pinia storage metrics
-        const useStore = useUserStore()
-        useStore.setToken(token, email.value)
-        
-        // Push straight back to dashboard view state
-        router.push('/')
-      } else {
-        // Fallback redirection to login if automated sign-in fails
-        router.push('/login')
-      }
-    } else {
-      errorMessage.value = response.data.message || 'Registration failed.'
-    }
+    const useStore = useUserStore()
+    useStore.setToken(loginData.token, email.value)
+    
+    router.push('/')
+    
   } catch (err) {
     console.error('Registration error:', err)
     errorMessage.value = 'An error occurred during account registration processing metrics.'

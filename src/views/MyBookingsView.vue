@@ -74,8 +74,8 @@ onMounted(loadMyBookings)
     <div v-else class="space-y-4">
       <div 
         v-for="b in bookings" 
-        :key="b.BookingID || b.bookingID"
-        @click="viewDetail(b.BookingID || b.bookingID)"
+        :key="b.bookingID"
+        @click="viewDetail( b.bookingID)"
         class="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-6 group">
         
         <div class="flex items-start gap-4">
@@ -85,7 +85,7 @@ onMounted(loadMyBookings)
           <div>
             <div class="flex items-center gap-3 flex-wrap">
               <h3 class="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors">
-                {{ b.HotelName || b.hotelName }}
+                {{ b.hotelName }}
               </h3>
               <span 
                 :class="getStatusClass(b.status)" 
@@ -95,7 +95,7 @@ onMounted(loadMyBookings)
             </div>
             
             <p class="text-sm text-gray-500 font-medium mt-1">
-              📍 {{ b.City || b.city || 'Hong Kong' }} • Rooms Booked: <span class="font-semibold font-mono text-gray-700">{{ b.RoomsBooked || b.roomsBooked }}</span>
+              📍 {{ b.city || 'Hong Kong' }} • Rooms Booked: <span class="font-semibold font-mono text-gray-700">{{ b.RoomsBooked || b.roomsBooked }}</span>
             </p>
             
             <p class="text-sm text-gray-400 mt-2 flex items-center gap-1 font-medium">

@@ -13,9 +13,9 @@ export const hotelService = {
   async getAvailableHotels(searchParams: HotelSearchInputDto): Promise<AvailableHotelQueryResultDto[]> {
     try{
     const response = await api.post('/HotelBookingSystem/GetAvailableHotelsList', {
-      checkInDate: searchParams.CheckInDate,
-      checkOutDate: searchParams.CheckOutDate,
-      guests: searchParams.Guests
+      checkInDate: searchParams.checkInDate,
+      checkOutDate: searchParams.checkOutDate,
+      guests: searchParams.guests
     })
 
     // Returns the clean payload collection directly to the view
@@ -40,13 +40,19 @@ export const hotelService = {
     checkInDate: string
     checkOutDate: string
   }): Promise<RoomAvailabilityDto[]> {
+    try{
     const response = await api.post('/HotelBookingSystem/CheckRoomAvailability', {
       hotelId: payload.hotelId,
       checkInDate: payload.checkInDate,
       checkOutDate: payload.checkOutDate,
       roomTypeId: null // Matching your backend controller's expectations
     })
+      return response.data?.data || []
+    } catch (err: any) {
+      throw new Error(err.response?.data?.message || 'Failed to check room tier availability.')
+    }
+    
 
-    return response.data?.data || []
+    
   }
 }

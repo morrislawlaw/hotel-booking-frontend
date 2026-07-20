@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import api from '@/services/api'
+import { authService } from '@/services/authService'
+//import api from '@/services/api'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -22,27 +23,40 @@ const handleNormalLogin = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await api.post('/auth/Loginv2', {
+    // const response = await api.post('/auth/Loginv2', {
+    //   user_id: email.value,
+    //   password: password.value
+    // })
+
+    // // 🔥 FIX: Read the structured ApiResponse data model returned by your backend
+    // console.info('Response:', response.data.code)
+    // if (response.data && response.data.code === 0) {
+    //   const token = response.data.data.token
+      
+    //   // Save token and sync UI variables
+    //   userStore.setToken(token, email.value)
+      
+    //   // Clear alerts and push immediately to Home view
+    //   router.push('/')
+    // } else {
+    //   errorMessage.value = response.data.message || 'Invalid email or password configuration.'
+    // }
+    // Service handles the response structure and returns the unwrapped data payload directly
+
+    const data = await authService.login({
       user_id: email.value,
       password: password.value
     })
 
-    // 🔥 FIX: Read the structured ApiResponse data model returned by your backend
-    console.info('Response:', response.data.code)
-    if (response.data && response.data.code === 0) {
-      const token = response.data.data.token
-      
-      // Save token and sync UI variables
-      userStore.setToken(token, email.value)
-      
-      // Clear alerts and push immediately to Home view
-      router.push('/')
-    } else {
-      errorMessage.value = response.data.message || 'Invalid email or password configuration.'
-    }
+    // Save token and sync UI variables
+    userStore.setToken(data.token, email.value)
+    
+    // Clear alerts and push immediately to Home view
+    router.push('/')
   } catch (err: any) {
     console.error('Login request failed:', err)
-    errorMessage.value = 'Network connection failed. Please try again later.'
+    // If the service threw an Error instance, render its clean message string directly
+    errorMessage.value = err.message
   } finally {
     isLoading.value = false
   }

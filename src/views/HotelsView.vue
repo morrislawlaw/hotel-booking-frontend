@@ -13,38 +13,6 @@ const hotels = ref<AvailableHotelQueryResultDto[]>([])
 const loading = ref(false)
 const error = ref('')
 
-// const loadAvailableHotels = async () => {
-//   const checkIn = route.query.checkIn as string
-//   const checkOut = route.query.checkOut as string
-//   const guestCount = Number(route.query.guests || 2)
-
-//   if (!checkIn || !checkOut) {
-//     error.value = 'Check-in and Check-out dates are required parameters.'
-//     return
-//   }
-
-//   loading.value = true
-//   error.value = ''
-
-//   try {
-//     // Hits our new endpoint grouping items by hotel
-//     const response = await api.post('/HotelBookingSystem/GetAvailableHotelsList', {
-//       checkInDate: checkIn,
-//       checkOutDate: checkOut,
-//       guests: guestCount
-//     })
-    
-//     hotels.value = response.data?.data || []
-    
-//     if (hotels.value.length === 0) {
-//       error.value = 'No hotels found matching your destination, availability dates, or guest count capacity constraints.'
-//     }
-//   } catch (err: any) {
-//     error.value = err.response?.data?.message || err.message || 'Failed to aggregate available properties.'
-//   } finally {
-//     loading.value = false
-//   }
-// }
 const loadAvailableHotels = async () => {
   const checkIn = route.query.checkIn as string
   const checkOut = route.query.checkOut as string
@@ -59,9 +27,9 @@ const loadAvailableHotels = async () => {
   try {
     // 2. Consume the isolated service layer cleanly
     hotels.value = await hotelService.getAvailableHotels({
-      CheckInDate: checkIn,
-      CheckOutDate: checkOut,
-      Guests: guestCount
+      checkInDate: checkIn,
+      checkOutDate: checkOut,
+      guests: guestCount
     })
     
     if (hotels.value.length === 0) {
@@ -120,17 +88,17 @@ onMounted(loadAvailableHotels)
         <div class="h-48 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center text-6xl text-white relative">
           🏢
           <div class="absolute top-4 right-4 bg-black/30 backdrop-blur-md text-yellow-400 px-3 py-1 rounded-full text-sm font-bold">
-            ★ {{ hotel.StarRating || 4 }}
+            ★ {{ hotel.starRating || 4 }}
           </div>
         </div>
         
         <div class="p-6 flex-1 flex flex-col justify-between">
           <div>
             <h3 class="font-bold text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">
-              {{ hotel.HotelName }}
+              {{ hotel.hotelName }}
             </h3>
             <p class="text-gray-500 font-medium text-sm mt-1">
-              📍 {{ hotel.Address }}, {{ hotel.City }}
+              📍 {{ hotel.address }}, {{ hotel.city }}
             </p>
           </div>
           
@@ -138,7 +106,7 @@ onMounted(loadAvailableHotels)
             <div class="text-xs text-gray-400 uppercase font-bold tracking-wider">Starting From</div>
             <div class="flex justify-between items-baseline mt-1">
               <span class="text-3xl font-extrabold text-emerald-600">
-                HKD {{ (hotel.StartingPricePerNight).toLocaleString() }}
+                HKD {{ (hotel.startingPricePerNight).toLocaleString() }}
               </span>
               <span class="text-sm text-gray-500 font-medium">/ night</span>
             </div>

@@ -1,16 +1,9 @@
-// Matches UserDto.cs used for Loginv2 payload
-export interface UserLoginDto {
-  user_id?: string | null;
-  password?: string | null;
-  Email?: string | null;
-}
-
 // Matches RegisterDto.cs
 export interface RegisterDto {
-  Name: string;
-  Email: string;
-  Phone?: string | null;
-  Password: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  password: string;
 }
 
 // Represents the decrypted structured claims inside your client-side session store
@@ -18,4 +11,27 @@ export interface CurrentUser {
   customerId: string;
   email: string;
   name: string;
+}
+
+// Matches UserDto.cs used for Loginv2 payload
+export interface LoginInputDto {
+  user_id: string;
+  password?: string;
+}
+
+export interface RegisterInputDto {
+  name: string;
+  email: string;
+  phone?: string | null;
+  password?: string;
+}
+
+export interface ApiResponseWrapperDto<T> {
+  code: number;
+  message?: string | null;
+  data: T;
+}
+
+export interface AuthResponseDataDto {
+  token: string;
 }
