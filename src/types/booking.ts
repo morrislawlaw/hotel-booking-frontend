@@ -27,11 +27,54 @@ export interface RoomAvailabilityDto {
   maxOccupancy?: number | null;
 }
 
-// Combined frontend-friendly model for rooms
-export interface RoomModel extends RoomAvailabilityDto {
-  roomID: number;
-  roomNumber: string;
-  typeName: string;
-  basePricePerNight: number;
-  maxOccupancy?: number | null;
+// Unified input parameter object for availability checks
+export interface RoomAvailabilityQuery {
+  hotelId: number;
+  checkInDate: string;
+  checkOutDate: string;
+  roomTypeId: number | null;
+}
+
+export interface StripeCheckoutPayload {
+  checkInDate: string;
+  checkOutDate: string;
+  roomIDs: string;
+}
+
+export interface StripeCheckoutResponse {
+  checkoutUrl: string;
+}
+
+export interface BookingDetailDto {
+  bookingID: number;
+  hotelName: string;
+  city: string;
+  country?: string | null;
+  status: string;
+  customerName: string;
+  email: string;
+  phone?: string | null;
+  checkInDate: string;
+  checkOutDate: string;
+  numberOfNights: number;
+  roomsBooked: string;
+  totalAmount: number;
+}
+
+export interface BookingReportItemDto {
+  bookingID: number;
+  hotelName: string;
+  status: string;
+  city?: string | null;
+  RoomsBooked?: string | null;
+  roomsBooked?: string | null;
+  CheckIn_Friendly?: string | null;
+  CheckInFriendly?: string | null;
+  checkInDate: string;
+  CheckOut_Friendly?: string | null;
+  CheckOutFriendly?: string | null;
+  checkOutDate: string;
+  totalAmount_HKD?: string | null;
+  totalAmountHkd?: string | null;
+  totalAmount: number;
 }

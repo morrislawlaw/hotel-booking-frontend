@@ -2,7 +2,9 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import api from '@/services/api'
+import { bookingService } from '@/services/bookingService'
+import type { RoomAvailabilityDto } from '@/types/booking'
+//import api from '@/services/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -30,18 +32,36 @@ const loadHotelDetail = async () => {
       roomTypeId: null
     }
 
-    console.log('📤 Check Availability Payload:', payload)
-    const res = await api.post('/HotelBookingSystem/CheckRoomAvailability', payload)
-    console.log('📥 Check Availability Response:', res.data)
+    // console.log('📤 Check Availability Payload:', payload)
+    // const res = await api.post('/HotelBookingSystem/CheckRoomAvailability', payload)
+    // console.log('📥 Check Availability Response:', res.data)
 
-    availableRooms.value = res.data?.data || res.data || []
+    // availableRooms.value = res.data?.data || res.data || []
 
-    if (availableRooms.value.length > 0) {
-      // Safeguard case-sensitivity returned from the Stored Procedure
-      const primaryRoom = availableRooms.value[0]
+    // if (availableRooms.value.length > 0) {
+    //   // Safeguard case-sensitivity returned from the Stored Procedure
+    //   const primaryRoom = availableRooms.value[0]
+    //   hotel.value = {
+    //     hotelName: primaryRoom.hotelName || primaryRoom.HotelName,
+    //     city: primaryRoom.city || primaryRoom.City || 'Hong Kong'
+    //   }
+    // }
+    const cleanedRooms = await bookingService.checkRoomAvailability(payload)
+    availableRooms.value = cleanedRooms
+
+    // if (cleanedRooms.length > 0) {
+    //   const primaryRoom = cleanedRooms[0]
+    //   hotel.value = {
+    //     hotelName: primaryRoom.hotelName,
+    //     city: (route.query.city as string) || 'Hong Kong'
+    //   }
+    // }
+    // Destructure the first item safely inside the condition
+    const [primaryRoom] = cleanedRooms
+    if (primaryRoom) {
       hotel.value = {
-        hotelName: primaryRoom.hotelName || primaryRoom.HotelName,
-        city: primaryRoom.city || primaryRoom.City || 'Hong Kong'
+        hotelName: primaryRoom.hotelName,
+        city: (route.query.city as string) || 'Hong Kong'
       }
     }
   } catch (err: any) {
@@ -88,18 +108,21 @@ const createBooking = async () => {
   try {
     console.log('🚀 Forwarding transit payload metadata to Stripe controller gateway:', payload)
     
-    // Call your new dedicated payment controller
-    const response = await api.post('/StripePayment/CreateCheckoutSession', payload)
-    const checkoutUrl = response.data?.checkoutUrl || response.data?.data?.checkoutUrl
+    // // Call your new dedicated payment controller
+    // const response = await api.post('/StripePayment/CreateCheckoutSession', payload)
+    // const checkoutUrl = response.data?.checkoutUrl || response.data?.data?.checkoutUrl
 
-    if (checkoutUrl) {
-      message.value = { type: 'success', text: 'Secure checkout session created! Redirecting to Stripe...' }
+    // if (checkoutUrl) {
+    //   message.value = { type: 'success', text: 'Secure checkout session created! Redirecting to Stripe...' }
       
-      // 💥 THE REDIRECTION HANDSHAKE: Hand off the session focus completely to Stripe's payment network
-      window.location.href = checkoutUrl
-    } else {
-      throw new Error('Failed to parse a valid checkout link parameter map from server.')
-    }
+    //   // 💥 THE REDIRECTION HANDSHAKE: Hand off the session focus completely to Stripe's payment network
+    //   window.location.href = checkoutUrl
+    // } else {
+    //   throw new Error('Failed to parse a valid checkout link parameter map from server.')
+    // }
+    const { checkoutUrl } = await bookingService.createCheckoutSession(payload)
+    message.value = { type: 'success', text: 'Secure checkout session created! Redirecting to Stripe...' }
+    window.location.href = checkoutUrl
   } catch (err: any) {
     console.error('❌ Stripe processing failure details:', err)
     const msg = err.response?.data?.message || err.message || 'Payment initiation failed.'

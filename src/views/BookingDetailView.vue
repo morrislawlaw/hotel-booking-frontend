@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/services/api'
+import { bookingService } from '@/services/bookingService'
+import type { BookingDetailDto } from '@/types/booking'
+//import api from '@/services/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -15,8 +17,9 @@ const message = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 const loadBookingDetail = async () => {
   loading.value = true
   try {
-    const res = await api.post('/HotelBookingSystem/GetBookingDetail', { bookingID: bookingId })
-    booking.value = res.data?.data || res.data
+    // const res = await api.post('/HotelBookingSystem/GetBookingDetail', { bookingID: bookingId })
+    // booking.value = res.data?.data || res.data
+    booking.value = await bookingService.getBookingDetail(bookingId)
   } catch (err: any) {
     console.error(err)
   } finally {
@@ -29,9 +32,12 @@ const cancelBooking = async () => {
   if (!confirm('Cancel this booking?')) return
   actionLoading.value = true
   try {
-    const res = await api.post('/HotelBookingSystem/CancelBooking', { bookingID: bookingId })
+    // const res = await api.post('/HotelBookingSystem/CancelBooking', { bookingID: bookingId })
+    // message.value = { type: 'success', text: '✅ Booking cancelled successfully' }
+    // loadBookingDetail()
+    await bookingService.cancelBooking(bookingId)
     message.value = { type: 'success', text: '✅ Booking cancelled successfully' }
-    loadBookingDetail()
+    await loadBookingDetail()
   } catch (err: any) {
     message.value = { type: 'error', text: err.response?.data?.message || 'Cancel failed' }
   } finally {
@@ -44,9 +50,12 @@ const checkInBooking = async () => {
   if (!confirm('Check-in this booking?')) return
   actionLoading.value = true
   try {
-    const res = await api.post('/HotelBookingSystem/CheckInBooking', { bookingID: bookingId })
+    // const res = await api.post('/HotelBookingSystem/CheckInBooking', { bookingID: bookingId })
+    // message.value = { type: 'success', text: '✅ Checked in successfully' }
+    // loadBookingDetail()
+    await bookingService.checkInBooking(bookingId)
     message.value = { type: 'success', text: '✅ Checked in successfully' }
-    loadBookingDetail()
+    await loadBookingDetail()
   } catch (err: any) {
     message.value = { type: 'error', text: err.response?.data?.message || 'Check-in failed' }
   } finally {
@@ -59,9 +68,12 @@ const checkOutBooking = async () => {
   if (!confirm('Check-out this booking?')) return
   actionLoading.value = true
   try {
-    const res = await api.post('/HotelBookingSystem/CheckOutBooking', { bookingID: bookingId })
+    // const res = await api.post('/HotelBookingSystem/CheckOutBooking', { bookingID: bookingId })
+    // message.value = { type: 'success', text: '✅ Checked out successfully' }
+    // loadBookingDetail()
+    await bookingService.checkOutBooking(bookingId)
     message.value = { type: 'success', text: '✅ Checked out successfully' }
-    loadBookingDetail()
+    await loadBookingDetail()
   } catch (err: any) {
     message.value = { type: 'error', text: err.response?.data?.message || 'Check-out failed' }
   } finally {

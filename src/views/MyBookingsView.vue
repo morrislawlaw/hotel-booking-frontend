@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '@/services/api'
+import { bookingService } from '@/services/bookingService'
+import type { BookingReportItemDto } from '@/types/booking'
+// import api from '@/services/api'
 
 const router = useRouter()
 
@@ -14,12 +16,13 @@ const loadMyBookings = async () => {
   error.value = ''
   
   try {
-    // Hits your backend GetBookingReport endpoint
-    // Sending an empty object matches your backend's BookingReportFilterDto default expectation
-    const response = await api.post('/HotelBookingSystem/GetBookingReport', {})
+    // // Hits your backend GetBookingReport endpoint
+    // // Sending an empty object matches your backend's BookingReportFilterDto default expectation
+    // const response = await api.post('/HotelBookingSystem/GetBookingReport', {})
     
-    // Extract data handling your standard wrapper
-    bookings.value = response.data?.data || []
+    // // Extract data handling your standard wrapper
+    // bookings.value = response.data?.data || []
+    bookings.value = await bookingService.getMyBookings()
   } catch (err: any) {
     console.error('❌ Failed to load bookings:', err)
     error.value = err.response?.data?.message || err.message || 'Failed to retrieve your transaction history.'
