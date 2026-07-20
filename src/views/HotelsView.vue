@@ -1,15 +1,50 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { hotelService } from '@/services/hotelService'
+import type { AvailableHotelQueryResultDto } from '@/types'
 import api from '@/services/api'
 
 const route = useRoute()
 const router = useRouter()
 
-const hotels = ref<any[]>([])
+//const hotels = ref<any[]>([])
+const hotels = ref<AvailableHotelQueryResultDto[]>([])
 const loading = ref(false)
 const error = ref('')
 
+// const loadAvailableHotels = async () => {
+//   const checkIn = route.query.checkIn as string
+//   const checkOut = route.query.checkOut as string
+//   const guestCount = Number(route.query.guests || 2)
+
+//   if (!checkIn || !checkOut) {
+//     error.value = 'Check-in and Check-out dates are required parameters.'
+//     return
+//   }
+
+//   loading.value = true
+//   error.value = ''
+
+//   try {
+//     // Hits our new endpoint grouping items by hotel
+//     const response = await api.post('/HotelBookingSystem/GetAvailableHotelsList', {
+//       checkInDate: checkIn,
+//       checkOutDate: checkOut,
+//       guests: guestCount
+//     })
+    
+//     hotels.value = response.data?.data || []
+    
+//     if (hotels.value.length === 0) {
+//       error.value = 'No hotels found matching your destination, availability dates, or guest count capacity constraints.'
+//     }
+//   } catch (err: any) {
+//     error.value = err.response?.data?.message || err.message || 'Failed to aggregate available properties.'
+//   } finally {
+//     loading.value = false
+//   }
+// }
 const loadAvailableHotels = async () => {
   const checkIn = route.query.checkIn as string
   const checkOut = route.query.checkOut as string
@@ -21,23 +56,19 @@ const loadAvailableHotels = async () => {
   }
 
   loading.value = true
-  error.value = ''
-
   try {
-    // Hits our new endpoint grouping items by hotel
-    const response = await api.post('/HotelBookingSystem/GetAvailableHotelsList', {
-      checkInDate: checkIn,
-      checkOutDate: checkOut,
-      guests: guestCount
+    // 2. Consume the isolated service layer cleanly
+    hotels.value = await hotelService.getAvailableHotels({
+      CheckInDate: checkIn,
+      CheckOutDate: checkOut,
+      Guests: guestCount
     })
     
-    hotels.value = response.data?.data || []
-    
     if (hotels.value.length === 0) {
-      error.value = 'No hotels found matching your destination, availability dates, or guest count capacity constraints.'
+      error.value = 'No available properties matched your criteria.'
     }
   } catch (err: any) {
-    error.value = err.response?.data?.message || err.message || 'Failed to aggregate available properties.'
+    error.value = 'Failed to load booking properties.'
   } finally {
     loading.value = false
   }
