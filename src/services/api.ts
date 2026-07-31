@@ -3,8 +3,8 @@ import { useUserStore } from '@/stores/user'
 
 
 const api = axios.create({
-  // baseURL: 'https://hotel-api-linux-bdf7g6f3bjf0dwhz.eastasia-01.azurewebsites.net/api',   // ← Azure App Service as API 
-  baseURL: 'http://localhost:5172/api', // Point directly to your .NET 9 API port
+  baseURL: 'https://hotel-api-linux-bdf7g6f3bjf0dwhz.eastasia-01.azurewebsites.net/api',   // ← Azure App Service as API 
+  //baseURL: 'http://localhost:5172/api', // Point directly to your .NET 9 API port
   headers: {
     'Content-Type': 'application/json',
   },
