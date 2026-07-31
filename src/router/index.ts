@@ -63,7 +63,7 @@ const router = createRouter({
 })
 
 // Navigation Guard: Intercept routing attempts before they render
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   const userStore = useUserStore()
   const baseTitle = 'HotelBook'
   const pageTitle = to.meta.title ? `${to.meta.title} | ${baseTitle}` : baseTitle
@@ -72,11 +72,13 @@ router.beforeEach((to, from, next) => {
     // Update the actual DOM title property
   document.title = pageTitle
     // Redirect unauthenticated users back to the sign-in form
-    next('/login')
+    return { name: 'login' }; // or return '/login';
+    //next('/login')
   } else {
     // Update the actual DOM title property
   document.title = pageTitle
-    next()
+    //next()
+    return true
   }
 })
 

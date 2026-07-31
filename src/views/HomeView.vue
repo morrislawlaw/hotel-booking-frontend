@@ -7,12 +7,29 @@ const router = useRouter()
 const checkIn = ref('')
 const checkOut = ref('')
 const guests = ref(2)
+const errorMessage = ref('') // Added reactive error state
 
 const searchHotels = () => {
+  // Clear previous errors
+  errorMessage.value = ''
+
+  // 1. Validation: Check empty inputs
   if (!checkIn.value || !checkOut.value) {
-    alert('Please select check-in and check-out dates')
+    errorMessage.value = 'Please select check-in and check-out dates'
     return
   }
+
+  // 2. Validation: Check-out must be after check-in
+  if (new Date(checkOut.value) <= new Date(checkIn.value)) {
+    errorMessage.value = 'Check-out date must be after check-in date'
+    return
+  }
+
+  // if (!checkIn.value || !checkOut.value) {
+  //   alert('Please select check-in and check-out dates')
+  //   return
+  // }
+
   router.push({
     name: 'hotels',
     query: {
@@ -41,6 +58,15 @@ const searchHotels = () => {
 
       <!-- Search Card -->
       <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-3xl mx-auto">
+      <!-- Validation Error Message Banner -->
+        <div 
+          v-if="errorMessage" 
+          role="alert"
+          class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-sm font-medium rounded-2xl text-left"
+        >
+          ⚠️ {{ errorMessage }}
+        </div>
+        
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Check-in</label>
